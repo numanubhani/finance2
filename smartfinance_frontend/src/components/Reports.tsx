@@ -87,7 +87,7 @@ const Reports: React.FC = () => {
               onChange={(e) =>
                 setDateRange((prev) => ({ ...prev, start: e.target.value }))
               }
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white [&::-webkit-calendar-picker-indicator]:invert-0 dark:[&::-webkit-calendar-picker-indicator]:invert"
             />
           </div>
 
@@ -101,7 +101,7 @@ const Reports: React.FC = () => {
               onChange={(e) =>
                 setDateRange((prev) => ({ ...prev, end: e.target.value }))
               }
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white [&::-webkit-calendar-picker-indicator]:invert-0 dark:[&::-webkit-calendar-picker-indicator]:invert"
             />
           </div>
 
@@ -259,10 +259,7 @@ const Reports: React.FC = () => {
                 );
 
                 return (
-                  <tr
-                    key={transaction.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
-                  >
+                  <tr key={transaction.id} className="">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {new Date(transaction.date).toLocaleDateString()}
                     </td>
