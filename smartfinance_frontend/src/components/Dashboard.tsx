@@ -1,9 +1,28 @@
-import React from "react";
-import { TrendingUp, TrendingDown, CreditCard, DollarSign } from "lucide-react";
-import { useData } from "../contexts/DataContext";
+import React, { useState } from "react";
+import {
+  TrendingUp,
+  TrendingDown,
+  CreditCard,
+  DollarSign,
+  Eye,
+  Edit,
+  X,
+} from "lucide-react";
+import { useData, Transaction } from "../contexts/DataContext";
+import { useToast } from "../contexts/ToastContext";
+import { format } from "date-fns";
 
 const Dashboard: React.FC = () => {
-  const { banks, transactions } = useData();
+  const { banks, transactions, updateTransaction } = useData();
+  const { showToast } = useToast();
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<{
+    description: string;
+    amount: string;
+    date: string;
+  }>({ description: "", amount: "", date: "" });
 
   const totalBalance = banks.reduce(
     (sum, bank) =>
@@ -145,32 +164,47 @@ const Dashboard: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p
-                      className={`font-semibold break-all ${
-                        transaction.type === "external_transfer" ||
+                  <div className="flex items-center space-x-3">
+                    <div className="text-right">
+                      <p
+                        className={`font-semibold break-all ${
+                          transaction.type === "external_transfer" ||
+                          transaction.type === "withdrawal" ||
+                          (transaction.type === "transfer" &&
+                            transaction.amount > 0)
+                            ? "text-red-600 dark:text-red-400"
+                            : transaction.amount > 0
+                              ? "text-green-600 dark:text-green-400"
+                              : "text-red-600 dark:text-red-400"
+                        }`}
+                      >
+                        {transaction.type === "external_transfer" ||
                         transaction.type === "withdrawal" ||
                         (transaction.type === "transfer" &&
                           transaction.amount > 0)
-                          ? "text-red-600 dark:text-red-400"
+                          ? "-"
                           : transaction.amount > 0
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-red-600 dark:text-red-400"
-                      }`}
+                            ? "+"
+                            : ""}
+                        Rs. {Math.abs(transaction.amount).toLocaleString()}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(transaction.date).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedTransaction(transaction);
+                        setEditForm({
+                          description: transaction.description,
+                          amount: Math.abs(transaction.amount).toString(),
+                          date: transaction.date,
+                        });
+                      }}
+                      className="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
                     >
-                      {transaction.type === "external_transfer" ||
-                      transaction.type === "withdrawal" ||
-                      (transaction.type === "transfer" &&
-                        transaction.amount > 0)
-                        ? "-"
-                        : transaction.amount > 0
-                          ? "+"
-                          : ""}
-                      Rs. {Math.abs(transaction.amount).toLocaleString()}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(transaction.date).toLocaleDateString()}
-                    </p>
+                      <Eye className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               );
