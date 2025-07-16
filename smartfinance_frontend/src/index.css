@@ -299,6 +299,44 @@ button {
   border-color: #2a2a2a !important;
 }
 
+/* Fix text visibility in dark mode */
+.dark .text-gray-500 {
+  color: #c0c0c0 !important;
+}
+
+.dark .text-gray-600 {
+  color: #d0d0d0 !important;
+}
+
+.dark .text-gray-700 {
+  color: #e0e0e0 !important;
+}
+
+.dark .text-gray-800 {
+  color: #f0f0f0 !important;
+}
+
+.dark .text-gray-900 {
+  color: #ffffff !important;
+}
+
+.dark .text-black {
+  color: #ffffff !important;
+}
+
+/* Placeholder text visibility */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #909090 !important;
+}
+
+/* Form text visibility */
+.dark input,
+.dark textarea,
+.dark select {
+  color: #ffffff !important;
+}
+
 /* Gold accent colors */
 .text-gold {
   color: var(--gold);
