@@ -50,12 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
         return;
       }
 
-      // Add the project amount to the selected account balance
-      updateAccount(targetBank.id, targetAccount.id, {
-        balance: targetAccount.balance + selectedNotification.amount,
-      });
-
-      // Create a transaction record for this transfer
+      // Create a transaction record for this transfer (addTransaction handles balance update)
       addTransaction({
         date: new Date().toISOString().split("T")[0],
         description: `Project completion payment: ${selectedNotification.projectName}`,
