@@ -15,7 +15,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
   const { theme, toggleTheme } = useTheme();
   const { notifications, unreadCount, markAsRead, clearNotification } =
     useNotifications();
-  const { banks } = useData();
+  const { banks, addTransaction, updateAccount } = useData();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
