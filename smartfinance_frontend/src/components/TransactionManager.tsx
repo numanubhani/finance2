@@ -798,13 +798,25 @@ const TransactionManager: React.FC = () => {
                   <div className="flex items-center space-x-4">
                     <span
                       className={`font-semibold ${
-                        transaction.amount >= 0
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-red-600 dark:text-red-400"
+                        transaction.type === "external_transfer" ||
+                        transaction.type === "withdrawal" ||
+                        (transaction.type === "transfer" &&
+                          transaction.amount > 0)
+                          ? "text-red-600 dark:text-red-400"
+                          : transaction.amount >= 0
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-red-600 dark:text-red-400"
                       }`}
                     >
-                      {transaction.amount >= 0 ? "+" : ""}Rs.{" "}
-                      {transaction.amount.toLocaleString()}
+                      {transaction.type === "external_transfer" ||
+                      transaction.type === "withdrawal" ||
+                      (transaction.type === "transfer" &&
+                        transaction.amount > 0)
+                        ? "-"
+                        : transaction.amount >= 0
+                          ? "+"
+                          : ""}
+                      Rs. {Math.abs(transaction.amount).toLocaleString()}
                     </span>
 
                     <div className="flex items-center space-x-2">
