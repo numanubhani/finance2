@@ -7,6 +7,7 @@ import {
   Settings,
   Menu,
   X,
+  Clipboard,
 } from "lucide-react";
 
 type SidebarProps = {
@@ -22,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage }) => {
     { id: "transactions", label: "Transactions", icon: Plus },
     { id: "banks-accounts", label: "Banks & Accounts", icon: Building2 },
     { id: "reports", label: "Reports", icon: BarChart3 },
+    { id: "board", label: "Board", icon: Clipboard },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
