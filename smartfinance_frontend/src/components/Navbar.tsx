@@ -25,6 +25,16 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
     onLogout();
   };
 
+  const handleTransfer = () => {
+    if (!selectedAccount || !selectedNotification) return;
+
+    // In a real app, you would transfer the amount to the selected account
+    toast.success(`Amount transferred to ${selectedAccount}`);
+    setShowTransferModal(false);
+    setSelectedNotification(null);
+    setSelectedAccount("");
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
       <div className="px-2 sm:px-4 lg:px-6">
@@ -172,6 +182,88 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
           </div>
         </div>
       </div>
+
+      {/* Transfer Modal */}
+      {showTransferModal && selectedNotification && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-md w-full border dark:border-gold/20">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Transfer Project Amount
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowTransferModal(false);
+                    setSelectedNotification(null);
+                    setSelectedAccount("");
+                  }}
+                  className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Project:{" "}
+                    <span className="font-medium">
+                      {selectedNotification.projectName}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {selectedNotification.message}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Select Account to Transfer Amount
+                  </label>
+                  <select
+                    value={selectedAccount}
+                    onChange={(e) => setSelectedAccount(e.target.value)}
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="">Choose an account...</option>
+                    {banks.map((bank) =>
+                      bank.accounts.map((account) => (
+                        <option
+                          key={`${bank.id}-${account.id}`}
+                          value={`${bank.name} - ${account.name}`}
+                        >
+                          {bank.name} - {account.name}
+                        </option>
+                      )),
+                    )}
+                  </select>
+                </div>
+
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    onClick={handleTransfer}
+                    disabled={!selectedAccount}
+                    className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
+                  >
+                    Transfer Amount
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowTransferModal(false);
+                      setSelectedNotification(null);
+                      setSelectedAccount("");
+                    }}
+                    className="flex-1 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
