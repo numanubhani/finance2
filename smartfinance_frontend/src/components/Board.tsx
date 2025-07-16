@@ -79,13 +79,34 @@ const Board: React.FC = () => {
     const grouped: { [key: string]: Project[] } = {};
 
     projects.forEach((project) => {
-      const projectDate = project.dueDate || project.createdAt;
-      const dateKey = format(parseISO(projectDate), "yyyy-MM-dd");
+      let projectDate;
+      try {
+        // Handle both ISO date strings and date-only strings
+        if (project.dueDate) {
+          projectDate = project.dueDate.includes("T")
+            ? parseISO(project.dueDate)
+            : new Date(project.dueDate + "T00:00:00");
+        } else {
+          projectDate = project.createdAt.includes("T")
+            ? parseISO(project.createdAt)
+            : new Date(project.createdAt + "T00:00:00");
+        }
 
-      if (!grouped[dateKey]) {
-        grouped[dateKey] = [];
+        const dateKey = format(projectDate, "yyyy-MM-dd");
+
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(project);
+      } catch (error) {
+        console.error("Error parsing date for project:", project, error);
+        // Fallback to today's date if parsing fails
+        const dateKey = format(new Date(), "yyyy-MM-dd");
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(project);
       }
-      grouped[dateKey].push(project);
     });
 
     return grouped;
@@ -98,6 +119,7 @@ const Board: React.FC = () => {
       projectFrom: "",
       amount: "",
       status: "started",
+      priority: "medium",
       dueDate: "",
     });
     setSelectedFiles([]);
@@ -131,7 +153,9 @@ const Board: React.FC = () => {
       amount: parseFloat(formData.amount),
       files: selectedFiles,
       status: formData.status,
-      createdAt: editingProject?.createdAt || new Date().toISOString(),
+      priority: formData.priority,
+      createdAt:
+        editingProject?.createdAt || new Date().toISOString().split("T")[0],
       dueDate: formData.dueDate || undefined,
     };
 
@@ -156,6 +180,7 @@ const Board: React.FC = () => {
       projectFrom: project.projectFrom,
       amount: project.amount.toString(),
       status: project.status,
+      priority: project.priority,
       dueDate: project.dueDate || "",
     });
     setSelectedFiles(project.files);
