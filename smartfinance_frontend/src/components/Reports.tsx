@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Filter, Download, TrendingUp, TrendingDown } from "lucide-react";
 import { useData } from "../contexts/DataContext";
+import { useToast } from "../contexts/ToastContext";
 
 const Reports: React.FC = () => {
   const { banks, transactions } = useData();
+  const { showToast } = useToast();
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [selectedBank, setSelectedBank] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
@@ -44,7 +46,8 @@ const Reports: React.FC = () => {
     };
 
     console.log("Downloading PDF report with data:", reportData);
-    alert(
+    showToast(
+      "info",
       "PDF report download would start here. In a real app, this would generate and download a PDF file.",
     );
   };
