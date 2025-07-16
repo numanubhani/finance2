@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { Send, Brain, AlertCircle } from 'lucide-react';
-import { useData } from '../contexts/DataContext';
+import React, { useState } from "react";
+import { Send, Brain, AlertCircle } from "lucide-react";
+import { useData } from "../contexts/DataContext";
+import { useToast } from "../contexts/ToastContext";
 
 const AddTransaction: React.FC = () => {
   const { banks, addTransaction } = useData();
-  const [input, setInput] = useState('');
+  const { showToast } = useToast();
+  const [input, setInput] = useState("");
   const [interpretation, setInterpretation] = useState<{
     action: string;
     amount: number;
@@ -17,53 +19,60 @@ const AddTransaction: React.FC = () => {
 
   const parseNaturalLanguage = (text: string) => {
     const lowercaseText = text.toLowerCase();
-    
+
     // Extract amount
     const amountMatch = text.match(/(\d+)/);
     const amount = amountMatch ? parseInt(amountMatch[1]) : 0;
-    
+
     // Determine action
-    let action = 'deposit';
-    if (lowercaseText.includes('lia hai') || lowercaseText.includes('withdraw') || lowercaseText.includes('nikala')) {
-      action = 'withdrawal';
-    } else if (lowercaseText.includes('deposit') || lowercaseText.includes('dala')) {
-      action = 'deposit';
-    } else if (lowercaseText.includes('transfer')) {
-      action = 'transfer';
+    let action = "deposit";
+    if (
+      lowercaseText.includes("lia hai") ||
+      lowercaseText.includes("withdraw") ||
+      lowercaseText.includes("nikala")
+    ) {
+      action = "withdrawal";
+    } else if (
+      lowercaseText.includes("deposit") ||
+      lowercaseText.includes("dala")
+    ) {
+      action = "deposit";
+    } else if (lowercaseText.includes("transfer")) {
+      action = "transfer";
     }
-    
+
     // Extract bank name
-    let bankName = '';
-    let accountName = '';
-    
-    banks.forEach(bank => {
+    let bankName = "";
+    let accountName = "";
+
+    banks.forEach((bank) => {
       if (lowercaseText.includes(bank.name.toLowerCase())) {
         bankName = bank.name;
         // Try to find account name
-        bank.accounts.forEach(account => {
+        bank.accounts.forEach((account) => {
           if (lowercaseText.includes(account.name.toLowerCase())) {
             accountName = account.name;
           }
         });
       }
     });
-    
+
     const needsMoreInfo = !bankName || !accountName;
-    
+
     return {
       action,
       amount,
       bank: bankName,
       account: accountName,
       description: text,
-      needsConfirmation: needsMoreInfo
+      needsConfirmation: needsMoreInfo,
     };
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    
+
     const parsed = parseNaturalLanguage(input);
     setInterpretation(parsed);
     setNeedsConfirmation(parsed.needsConfirmation);
@@ -72,25 +81,30 @@ const AddTransaction: React.FC = () => {
 
   const handleConfirm = () => {
     if (!interpretation) return;
-    
-    const bank = banks.find(b => b.name === interpretation.bank);
-    const account = bank?.accounts.find(a => a.name === interpretation.account);
-    
+
+    const bank = banks.find((b) => b.name === interpretation.bank);
+    const account = bank?.accounts.find(
+      (a) => a.name === interpretation.account,
+    );
+
     if (!bank || !account) {
-      alert('Please select a valid bank and account');
+      showToast("error", "Please select a valid bank and account");
       return;
     }
-    
+
     addTransaction({
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       description: interpretation.description,
-      amount: interpretation.action === 'withdrawal' ? -interpretation.amount : interpretation.amount,
-      type: interpretation.action as 'deposit' | 'withdrawal' | 'transfer',
+      amount:
+        interpretation.action === "withdrawal"
+          ? -interpretation.amount
+          : interpretation.amount,
+      type: interpretation.action as "deposit" | "withdrawal" | "transfer",
       bankId: bank.id,
-      accountId: account.id
+      accountId: account.id,
     });
-    
-    setInput('');
+
+    setInput("");
     setInterpretation(null);
     setShowConfirmation(false);
     setNeedsConfirmation(false);
@@ -122,7 +136,7 @@ const AddTransaction: React.FC = () => {
               className="w-full h-32 p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
             />
           </div>
-          
+
           <button
             type="submit"
             disabled={!input.trim()}
@@ -143,7 +157,7 @@ const AddTransaction: React.FC = () => {
               AI Interpretation
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <p className="text-sm text-gray-500 dark:text-gray-400">Action</p>
@@ -160,17 +174,19 @@ const AddTransaction: React.FC = () => {
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <p className="text-sm text-gray-500 dark:text-gray-400">Bank</p>
               <p className="font-medium text-gray-900 dark:text-white">
-                {interpretation.bank || 'Not specified'}
+                {interpretation.bank || "Not specified"}
               </p>
             </div>
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Account</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Account
+              </p>
               <p className="font-medium text-gray-900 dark:text-white">
-                {interpretation.account || 'Not specified'}
+                {interpretation.account || "Not specified"}
               </p>
             </div>
           </div>
-          
+
           {needsConfirmation && (
             <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
               <div className="flex items-center space-x-2">
@@ -180,11 +196,12 @@ const AddTransaction: React.FC = () => {
                 </p>
               </div>
               <p className="text-yellow-700 dark:text-yellow-300 mt-1">
-                Konse bank se? Konsa account? Please specify the bank and account.
+                Konse bank se? Konsa account? Please specify the bank and
+                account.
               </p>
             </div>
           )}
-          
+
           <div className="flex space-x-4">
             <button
               onClick={handleConfirm}
