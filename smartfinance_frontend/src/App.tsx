@@ -30,6 +30,7 @@ function App() {
     | null
   >(null);
   const [currentPage, setCurrentPage] = useState("dashboard");
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   // Check for token on load
   useEffect(() => {
@@ -119,13 +120,22 @@ function App() {
               onDataProcessed={handleDataProcessed}
             >
               <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-                <Navbar onLogout={handleLogout} onNavigate={setCurrentPage} />
+                <Navbar
+                  onLogout={handleLogout}
+                  onNavigate={setCurrentPage}
+                  sidebarVisible={sidebarVisible}
+                  onToggleSidebar={() => setSidebarVisible(!sidebarVisible)}
+                />
                 <div className="flex">
                   <Sidebar
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
+                    visible={sidebarVisible}
+                    onToggle={() => setSidebarVisible(!sidebarVisible)}
                   />
-                  <main className="flex-1 lg:ml-64 pt-16">
+                  <main
+                    className={`flex-1 pt-16 transition-all duration-300 ${sidebarVisible ? "lg:ml-64" : "lg:ml-16"}`}
+                  >
                     <div className="p-4 md:p-6 lg:p-8">{renderPage()}</div>
                   </main>
                 </div>
