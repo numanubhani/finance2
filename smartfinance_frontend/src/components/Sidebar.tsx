@@ -13,9 +13,16 @@ import {
 type SidebarProps = {
   currentPage: string;
   setCurrentPage: (page: string) => void;
+  visible: boolean;
+  onToggle: () => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  currentPage,
+  setCurrentPage,
+  visible,
+  onToggle,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
@@ -39,9 +46,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed left-0 top-16 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-200 ease-in-out z-40 ${
+        className={`fixed left-0 top-16 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out z-40 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        } lg:translate-x-0 ${visible ? "w-64" : "w-16"}`}
       >
         <div className="p-4">
           <nav className="space-y-2">
@@ -53,15 +60,25 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage }) => {
                   onClick={() => {
                     setCurrentPage(item.id);
                     setIsOpen(false);
+                    if (!visible) onToggle(); // Expand sidebar when clicking icon in collapsed mode
                   }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center rounded-lg transition-colors group relative ${
+                    visible ? "space-x-3 px-4 py-3" : "justify-center px-2 py-3"
+                  } ${
                     currentPage === item.id
                       ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   }`}
+                  title={!visible ? item.label : undefined}
                 >
-                  <Icon className="h-5 w-5" />
-                  <span className="font-medium">{item.label}</span>
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  {visible && <span className="font-medium">{item.label}</span>}
+                  {/* Tooltip for collapsed state */}
+                  {!visible && (
+                    <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                      {item.label}
+                    </div>
+                  )}
                 </button>
               );
             })}
