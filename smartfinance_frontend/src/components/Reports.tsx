@@ -277,7 +277,9 @@ const Reports: React.FC = () => {
                             ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
                             : transaction.type === "withdrawal"
                               ? "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
-                              : "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
+                              : transaction.type === "external_transfer"
+                                ? "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400"
+                                : "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
                         }`}
                       >
                         {transaction.type}
@@ -286,13 +288,23 @@ const Reports: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <span
                         className={
-                          transaction.amount > 0
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-red-600 dark:text-red-400"
+                          transaction.type === "external_transfer" ||
+                          transaction.type === "withdrawal"
+                            ? "text-red-600 dark:text-red-400"
+                            : transaction.type === "deposit"
+                              ? "text-green-600 dark:text-green-400"
+                              : transaction.amount > 0
+                                ? "text-green-600 dark:text-green-400"
+                                : "text-red-600 dark:text-red-400"
                         }
                       >
-                        {transaction.amount > 0 ? "+" : ""}Rs.{" "}
-                        {Math.abs(transaction.amount).toLocaleString()}
+                        {transaction.type === "external_transfer" ||
+                        transaction.type === "withdrawal"
+                          ? "-"
+                          : transaction.amount > 0
+                            ? "+"
+                            : ""}
+                        Rs. {Math.abs(transaction.amount).toLocaleString()}
                       </span>
                     </td>
                   </tr>
