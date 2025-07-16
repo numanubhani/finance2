@@ -635,25 +635,6 @@ const Board: React.FC = () => {
           })}
         </div>
       </div>
-
-      {projects.length === 0 && !showAddForm && (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Clipboard className="h-12 w-12 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            No projects yet
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">
-            Get started by adding your first project to the board.
-          </p>
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Add Your First Project</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };
