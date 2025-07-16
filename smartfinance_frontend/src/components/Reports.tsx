@@ -119,13 +119,26 @@ const Reports: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-['DM_Sans']">
           Reports
         </h1>
-        <button
-          onClick={handleDownloadPDF}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-        >
-          <Download className="h-5 w-5" />
-          <span>Download PDF</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setShowBoardProjects(!showBoardProjects)}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+              showBoardProjects
+                ? "bg-purple-600 hover:bg-purple-700 text-white"
+                : "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+            }`}
+          >
+            <Clipboard className="h-5 w-5" />
+            <span>Board Projects</span>
+          </button>
+          <button
+            onClick={handleDownloadPDF}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          >
+            <Download className="h-5 w-5" />
+            <span>Download PDF</span>
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
