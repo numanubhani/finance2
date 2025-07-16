@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { MessageCircle, X, Send, Bot } from 'lucide-react';
+import React, { useState } from "react";
+import { MessageCircle, X, Send, Bot } from "lucide-react";
 
 type ChatMessage = {
   id: string;
   text: string;
   timestamp: Date;
-  type: 'user' | 'assistant';
+  type: "user" | "assistant";
 };
 
 const FloatingChatAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: '1',
+      id: "1",
       text: 'Hello! I\'m your SmartFinance AI Assistant. You can tell me about your transactions in natural language like "Meh nay Meezan Bank sy 2500 lia hai" or "5000 deposit kia HBL may".',
       timestamp: new Date(),
-      type: 'assistant'
-    }
+      type: "assistant",
+    },
   ]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
 
   const handleSendMessage = () => {
     if (!inputText.trim()) return;
@@ -27,11 +27,11 @@ const FloatingChatAssistant: React.FC = () => {
       id: Date.now().toString(),
       text: inputText,
       timestamp: new Date(),
-      type: 'user'
+      type: "user",
     };
 
-    setMessages(prev => [...prev, newMessage]);
-    setInputText('');
+    setMessages((prev) => [...prev, newMessage]);
+    setInputText("");
 
     // Simulate assistant response after a brief delay
     setTimeout(() => {
@@ -39,14 +39,14 @@ const FloatingChatAssistant: React.FC = () => {
         id: (Date.now() + 1).toString(),
         text: `I understand you want to record a transaction: "${inputText}". Let me process this for you...`,
         timestamp: new Date(),
-        type: 'assistant'
+        type: "assistant",
       };
-      setMessages(prev => [...prev, assistantResponse]);
+      setMessages((prev) => [...prev, assistantResponse]);
     }, 1000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -58,7 +58,7 @@ const FloatingChatAssistant: React.FC = () => {
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center ${
-          isOpen ? 'scale-0' : 'scale-100'
+          isOpen ? "scale-0" : "scale-100"
         }`}
       >
         <MessageCircle className="h-6 w-6" />
@@ -91,28 +91,30 @@ const FloatingChatAssistant: React.FC = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 flex flex-col justify-start items-start">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
                   className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                    message.type === 'user'
-                      ? 'bg-blue-600 text-white rounded-br-sm'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-bl-sm'
+                    message.type === "user"
+                      ? "bg-blue-600 text-white rounded-br-sm"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-bl-sm"
                   }`}
                 >
                   <p>{message.text}</p>
-                  <p className={`text-xs mt-1 ${
-                    message.type === 'user' 
-                      ? 'text-blue-100' 
-                      : 'text-gray-500 dark:text-gray-400'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString([], { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
+                  <p
+                    className={`text-xs mt-1 ${
+                      message.type === "user"
+                        ? "text-blue-100"
+                        : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    {message.timestamp.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })}
                   </p>
                 </div>
@@ -145,7 +147,7 @@ const FloatingChatAssistant: React.FC = () => {
 
       {/* Overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-20 z-40"
           onClick={() => setIsOpen(false)}
         />
