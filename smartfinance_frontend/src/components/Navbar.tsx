@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Moon, Sun, User, Settings, LogOut, Bell, X } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import { useNotifications } from "../contexts/NotificationContext";
+import { useData } from "../contexts/DataContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,7 +13,14 @@ type NavbarProps = {
 
 const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
   const { theme, toggleTheme } = useTheme();
+  const { notifications, unreadCount, markAsRead, clearNotification } =
+    useNotifications();
+  const { banks } = useData();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  const [selectedAccount, setSelectedAccount] = useState("");
   const [username, setUsername] = useState("");
 
   useEffect(() => {
