@@ -9,6 +9,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useData } from "../contexts/DataContext";
+import { useToast } from "../contexts/ToastContext";
 
 const BanksAccounts: React.FC = () => {
   const {
@@ -20,6 +21,7 @@ const BanksAccounts: React.FC = () => {
     deleteBank,
     deleteAccount,
   } = useData();
+  const { showToast } = useToast();
   const [expandedBanks, setExpandedBanks] = useState<Set<string>>(new Set());
   const [showAddBank, setShowAddBank] = useState(false);
   const [showAddAccount, setShowAddAccount] = useState<string | null>(null);
@@ -63,7 +65,7 @@ const BanksAccounts: React.FC = () => {
       setNewAccountBalance("");
       setShowAddAccount(null);
     } else {
-      alert("Please enter both account title and account number");
+      showToast("error", "Please enter both account title and account number");
     }
   };
 
