@@ -15,6 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useToast } from "../contexts/ToastContext";
+import { useNotifications } from "../contexts/NotificationContext";
 import {
   format,
   addDays,
@@ -47,6 +48,7 @@ export type Project = {
 
 const Board: React.FC = () => {
   const { showToast } = useToast();
+  const { addNotification } = useNotifications();
   const [projects, setProjects] = useState<Project[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -160,9 +162,24 @@ const Board: React.FC = () => {
     };
 
     if (editingProject) {
+      const oldProject = projects.find((p) => p.id === editingProject.id);
       setProjects((prev) =>
         prev.map((p) => (p.id === editingProject.id ? projectData : p)),
       );
+
+      // Check if status changed to complete
+      if (
+        oldProject &&
+        oldProject.status !== "complete" &&
+        projectData.status === "complete"
+      ) {
+        addNotification(
+          projectData.id,
+          projectData.name,
+          `Your project "${projectData.name}" has been marked as completed! Click to transfer Rs. ${projectData.amount.toLocaleString()} to your account.`,
+        );
+      }
+
       showToast("success", "Project updated successfully");
     } else {
       setProjects((prev) => [...prev, projectData]);
