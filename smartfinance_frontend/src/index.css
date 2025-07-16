@@ -1,22 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    "DM Sans",
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 body {
   line-height: 1.5;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 1.2;
 }
 
@@ -53,7 +71,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Smooth transitions */
 * {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 /* Animate in utility */
@@ -81,8 +102,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Focus styles */
-input:focus, 
-textarea:focus, 
+input:focus,
+textarea:focus,
 select:focus {
   outline: none;
   ring: 2px;
@@ -140,7 +161,7 @@ button {
   h1 {
     font-size: 1.5rem;
   }
-  
+
   h2 {
     font-size: 1.25rem;
   }
@@ -157,8 +178,12 @@ button {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Improved scrollbar for chat */
@@ -197,23 +222,117 @@ button {
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
+  --gold: #d4af37;
+  --gold-dark: #b8941f;
+  --gold-light: #f7e98e;
 }
 
 .dark {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --secondary: #64748b;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --gray-50: #111827;
-  --gray-100: #1f2937;
-  --gray-200: #374151;
-  --gray-300: #4b5563;
-  --gray-400: #6b7280;
-  --gray-500: #9ca3af;
-  --gray-600: #d1d5db;
-  --gray-700: #e5e7eb;
-  --gray-800: #f3f4f6;
-  --gray-900: #f9fafb;
+  --primary: #d4af37;
+  --primary-dark: #b8941f;
+  --secondary: #8b7355;
+  --success: #22d3ee;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --gray-50: #000000;
+  --gray-100: #0a0a0a;
+  --gray-200: #1a1a1a;
+  --gray-300: #2a2a2a;
+  --gray-400: #404040;
+  --gray-500: #6a6a6a;
+  --gray-600: #909090;
+  --gray-700: #c0c0c0;
+  --gray-800: #e0e0e0;
+  --gray-900: #ffffff;
+  --gold: #d4af37;
+  --gold-dark: #b8941f;
+  --gold-light: #f7e98e;
+}
+
+/* Dark gold theme specific styles */
+.dark {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.dark .bg-white {
+  background-color: #0a0a0a !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #1a1a1a !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1a1a1a !important;
+}
+
+.dark .bg-gray-800 {
+  background-color: #0a0a0a !important;
+}
+
+.dark .bg-blue-100 {
+  background-color: rgba(212, 175, 55, 0.1) !important;
+}
+
+.dark .bg-green-100 {
+  background-color: rgba(34, 211, 238, 0.1) !important;
+}
+
+.dark .bg-red-100 {
+  background-color: rgba(248, 113, 113, 0.1) !important;
+}
+
+.dark .bg-purple-100 {
+  background-color: rgba(168, 85, 247, 0.1) !important;
+}
+
+.dark .text-blue-600 {
+  color: #d4af37 !important;
+}
+
+.dark .text-blue-400 {
+  color: #f7e98e !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #2a2a2a !important;
+}
+
+.dark .border-gray-700 {
+  border-color: #2a2a2a !important;
+}
+
+/* Gold accent colors */
+.text-gold {
+  color: var(--gold);
+}
+
+.text-gold-dark {
+  color: var(--gold-dark);
+}
+
+.text-gold-light {
+  color: var(--gold-light);
+}
+
+.bg-gold {
+  background-color: var(--gold);
+}
+
+.bg-gold-dark {
+  background-color: var(--gold-dark);
+}
+
+.bg-gold-light {
+  background-color: var(--gold-light);
+}
+
+.border-gold {
+  border-color: var(--gold);
+}
+
+/* Button hover effects for dark theme */
+.dark button:hover {
+  background-color: rgba(212, 175, 55, 0.1);
 }
