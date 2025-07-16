@@ -135,7 +135,7 @@ const TransactionManager: React.FC = () => {
     );
 
     if (!bank || !account) {
-      alert("Please select a valid bank and account");
+      showToast("error", "Please select a valid bank and account");
       return;
     }
 
