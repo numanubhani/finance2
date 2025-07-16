@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, Moon, Sun, Check, X } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import React, { useState } from "react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Moon,
+  Sun,
+  Check,
+  X,
+} from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
+import { useToast } from "../contexts/ToastContext";
 
 type RegisterProps = {
   onRegister: () => void;
@@ -9,21 +20,22 @@ type RegisterProps = {
 
 const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
   const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
-    username: '',
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -31,44 +43,50 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      showToast("error", "Passwords do not match!");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/register/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://127.0.0.1:8000/api/register/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: formData.username,
           fullName: formData.fullName,
           email: formData.email,
-          password: formData.password
-        })
+          password: formData.password,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert('Account created successfully! Please log in.');
+        showToast("success", "Account created successfully! Please log in.");
         onRegister(); // Navigate to login screen
       } else {
         const message = Object.entries(data)
-          .map(([key, val]) => `${key}: ${(val as string[]).join(', ')}`)
-          .join('\n');
-        alert('Error:\n' + message);
+          .map(([key, val]) => `${key}: ${(val as string[]).join(", ")}`)
+          .join("\n");
+        showToast("error", "Error:\n" + message);
       }
     } catch (error) {
-      alert('Network error: ' + error);
+      showToast("error", "Network error: " + error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const passwordsMatch = formData.password && formData.confirmPassword && formData.password === formData.confirmPassword;
-  const passwordsDontMatch = formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword;
+  const passwordsMatch =
+    formData.password &&
+    formData.confirmPassword &&
+    formData.password === formData.confirmPassword;
+  const passwordsDontMatch =
+    formData.password &&
+    formData.confirmPassword &&
+    formData.password !== formData.confirmPassword;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-all duration-300">
@@ -77,7 +95,11 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
         onClick={toggleTheme}
         className="fixed top-6 right-6 p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-200 z-10"
       >
-        {theme === 'light' ? <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" /> : <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />}
+        {theme === "light" ? (
+          <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+        ) : (
+          <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+        )}
       </button>
 
       <div className="w-full max-w-md">
@@ -86,16 +108,24 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4">
             <span className="text-2xl font-bold text-white">S</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create Your</h1>
-          <h2 className="text-2xl font-semibold text-green-600 dark:text-green-400">SmartFinance AI Account</h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">Join thousands managing their finances intelligently</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Create Your
+          </h1>
+          <h2 className="text-2xl font-semibold text-green-600 dark:text-green-400">
+            SmartFinance AI Account
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Join thousands managing their finances intelligently
+          </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8 transition-all duration-300">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Username
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400" />
@@ -114,7 +144,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
 
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Full Name
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400" />
@@ -133,7 +165,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Email Address
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="h-5 w-5 text-gray-400" />
@@ -152,13 +186,15 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Password
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -171,47 +207,61 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirm Password</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Confirm Password
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
                   className={`w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 transition-colors ${
-                    passwordsMatch 
-                      ? 'border-green-300 dark:border-green-600 focus:ring-green-500 focus:border-green-500'
+                    passwordsMatch
+                      ? "border-green-300 dark:border-green-600 focus:ring-green-500 focus:border-green-500"
                       : passwordsDontMatch
-                      ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:border-green-500'
+                        ? "border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500"
+                        : "border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
                   }`}
                   placeholder="Confirm your password"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 space-x-1">
-                  {passwordsMatch && <Check className="h-5 w-5 text-green-500" />}
+                  {passwordsMatch && (
+                    <Check className="h-5 w-5 text-green-500" />
+                  )}
                   {passwordsDontMatch && <X className="h-5 w-5 text-red-500" />}
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 ml-2"
                   >
-                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
               {passwordsDontMatch && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">Passwords do not match</p>
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  Passwords do not match
+                </p>
               )}
             </div>
 
@@ -235,7 +285,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
           {/* Switch to login */}
           <div className="mt-6 text-center">
             <p className="text-gray-600 dark:text-gray-400">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
                 onClick={onSwitchToLogin}
                 className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors"
@@ -248,7 +298,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
 
         {/* Footer */}
         <div className="text-center mt-8">
-          <p className="text-sm text-gray-500 dark:text-gray-400">© 2024 SmartFinance AI. All rights reserved.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            © 2024 SmartFinance AI. All rights reserved.
+          </p>
         </div>
       </div>
     </div>
