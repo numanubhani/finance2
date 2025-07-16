@@ -10,6 +10,7 @@ import {
   X,
   Save,
   Upload,
+  Clipboard,
 } from "lucide-react";
 import { useToast } from "../contexts/ToastContext";
 
