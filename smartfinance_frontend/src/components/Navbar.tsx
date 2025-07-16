@@ -7,16 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 type NavbarProps = {
   onLogout: () => void;
   onNavigate: (page: string) => void;
-  sidebarVisible: boolean;
-  onToggleSidebar: () => void;
 };
 
-const Navbar: React.FC<NavbarProps> = ({
-  onLogout,
-  onNavigate,
-  sidebarVisible,
-  onToggleSidebar,
-}) => {
+const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
   const { theme, toggleTheme } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [username, setUsername] = useState("");
@@ -52,18 +45,6 @@ const Navbar: React.FC<NavbarProps> = ({
 
           {/* Actions */}
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
-            {/* Sidebar Toggle */}
-            <button
-              onClick={onToggleSidebar}
-              className="hidden lg:flex p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
-              title={sidebarVisible ? "Hide Sidebar" : "Show Sidebar"}
-            >
-              {sidebarVisible ? (
-                <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
-              ) : (
-                <Menu className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
-              )}
-            </button>
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
