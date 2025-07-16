@@ -34,12 +34,12 @@ const Dashboard: React.FC = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 Total Balance
               </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-2xl font-bold text-gray-900 dark:text-white break-all">
                 Rs. {totalBalance.toLocaleString()}
               </p>
             </div>
@@ -50,12 +50,12 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 Total Income
               </p>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 break-all">
                 Rs. {totalIncome.toLocaleString()}
               </p>
             </div>
@@ -66,12 +66,12 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 Total Expenses
               </p>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+              <p className="text-2xl font-bold text-red-600 dark:text-red-400 break-all">
                 Rs. {totalExpenses.toLocaleString()}
               </p>
             </div>
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 Active Accounts
@@ -147,7 +147,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <p
-                      className={`font-semibold ${
+                      className={`font-semibold break-all ${
                         transaction.amount > 0
                           ? "text-green-600 dark:text-green-400"
                           : "text-red-600 dark:text-red-400"
