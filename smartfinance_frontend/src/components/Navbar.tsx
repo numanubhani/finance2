@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Moon, Sun, User, Settings, LogOut, X, Menu } from "lucide-react";
+import { Moon, Sun, User, Settings, LogOut } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
