@@ -33,7 +33,10 @@ const Settings: React.FC = () => {
 
   const handleAddBank = () => {
     if (newBankName.trim()) {
-      addBank({ name: newBankName.trim(), accounts: [] });
+      const capitalizedName =
+        newBankName.trim().charAt(0).toUpperCase() +
+        newBankName.trim().slice(1);
+      addBank({ name: capitalizedName, accounts: [] });
       setNewBankName("");
       setShowAddBankForm(false);
       setBankCount((prev) => prev + 1);
