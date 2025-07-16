@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Plus,
   Edit2,
@@ -11,8 +11,18 @@ import {
   Save,
   Upload,
   Clipboard,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useToast } from "../contexts/ToastContext";
+import {
+  format,
+  addDays,
+  startOfWeek,
+  endOfWeek,
+  isSameDay,
+  parseISO,
+} from "date-fns";
 
 export type ProjectStatus =
   | "in_progress"
@@ -29,6 +39,7 @@ export type Project = {
   files: File[];
   status: ProjectStatus;
   createdAt: string;
+  dueDate?: string;
 };
 
 const Board: React.FC = () => {
@@ -36,14 +47,45 @@ const Board: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [currentWeek, setCurrentWeek] = useState(new Date());
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     projectFrom: "",
     amount: "",
     status: "started" as ProjectStatus,
+    dueDate: "",
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  // Calculate week dates
+  const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 }); // Monday start
+  const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
+
+  const weekDays = useMemo(() => {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      days.push(addDays(weekStart, i));
+    }
+    return days;
+  }, [weekStart]);
+
+  // Group projects by date
+  const projectsByDate = useMemo(() => {
+    const grouped: { [key: string]: Project[] } = {};
+
+    projects.forEach((project) => {
+      const projectDate = project.dueDate || project.createdAt;
+      const dateKey = format(parseISO(projectDate), "yyyy-MM-dd");
+
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+      grouped[dateKey].push(project);
+    });
+
+    return grouped;
+  }, [projects]);
 
   const resetForm = () => {
     setFormData({
@@ -52,6 +94,7 @@ const Board: React.FC = () => {
       projectFrom: "",
       amount: "",
       status: "started",
+      dueDate: "",
     });
     setSelectedFiles([]);
     setShowAddForm(false);
@@ -85,6 +128,7 @@ const Board: React.FC = () => {
       files: selectedFiles,
       status: formData.status,
       createdAt: editingProject?.createdAt || new Date().toISOString(),
+      dueDate: formData.dueDate || undefined,
     };
 
     if (editingProject) {
@@ -108,6 +152,7 @@ const Board: React.FC = () => {
       projectFrom: project.projectFrom,
       amount: project.amount.toString(),
       status: project.status,
+      dueDate: project.dueDate || "",
     });
     setSelectedFiles(project.files);
     setShowAddForm(true);
@@ -150,6 +195,14 @@ const Board: React.FC = () => {
     }
   };
 
+  const navigateWeek = (direction: "prev" | "next") => {
+    setCurrentWeek((prev) => addDays(prev, direction === "next" ? 7 : -7));
+  };
+
+  const goToToday = () => {
+    setCurrentWeek(new Date());
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -163,6 +216,38 @@ const Board: React.FC = () => {
           <Plus className="h-5 w-5" />
           <span>Add Project</span>
         </button>
+      </div>
+
+      {/* Calendar Navigation */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => navigateWeek("prev")}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </button>
+
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {format(weekStart, "MMM dd")} - {format(weekEnd, "MMM dd, yyyy")}
+            </h2>
+
+            <button
+              onClick={() => navigateWeek("next")}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <ChevronRight className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </button>
+          </div>
+
+          <button
+            onClick={goToToday}
+            className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/40 transition-colors"
+          >
+            Today
+          </button>
+        </div>
       </div>
 
       {/* Add/Edit Project Form */}
@@ -236,7 +321,7 @@ const Board: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Amount *
@@ -275,6 +360,23 @@ const Board: React.FC = () => {
                   <option value="complete">Complete</option>
                   <option value="incomplete">Incomplete</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Due Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.dueDate}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      dueDate: e.target.value,
+                    }))
+                  }
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white [&::-webkit-calendar-picker-indicator]:invert-0 dark:[&::-webkit-calendar-picker-indicator]:invert"
+                />
               </div>
             </div>
 
@@ -319,101 +421,127 @@ const Board: React.FC = () => {
         </div>
       )}
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                  {project.name}
-                </h3>
-                <div className="flex items-center space-x-2 mb-2">
-                  <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">
-                    {project.projectFrom}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => handleEdit(project)}
-                  className="p-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                >
-                  <Edit2 className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => handleDelete(project.id)}
-                  className="p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            {project.description && (
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                {project.description}
-              </p>
-            )}
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <DollarSign className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    Rs. {project.amount.toLocaleString()}
-                  </span>
-                </div>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}
-                >
-                  {getStatusLabel(project.status)}
-                </span>
-              </div>
-
-              {project.files.length > 0 && (
-                <div className="flex items-center space-x-2">
-                  <FileText className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">
-                    {project.files.length} file
-                    {project.files.length > 1 ? "s" : ""}
-                  </span>
-                </div>
-              )}
-
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Created {new Date(project.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {projects.length === 0 && !showAddForm && (
-          <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">
-            <Clipboard className="h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No projects yet
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">
-              Get started by adding your first project to the board.
-            </p>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+      {/* Calendar Grid */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
+          {weekDays.map((day, index) => (
+            <div
+              key={index}
+              className="p-4 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
             >
-              <Plus className="h-5 w-5" />
-              <span>Add Your First Project</span>
-            </button>
-          </div>
-        )}
+              <div className="text-center">
+                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  {format(day, "EEE")}
+                </div>
+                <div
+                  className={`text-lg font-semibold mt-1 ${
+                    isSameDay(day, new Date())
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-900 dark:text-white"
+                  }`}
+                >
+                  {format(day, "d")}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 min-h-[400px]">
+          {weekDays.map((day, index) => {
+            const dateKey = format(day, "yyyy-MM-dd");
+            const dayProjects = projectsByDate[dateKey] || [];
+
+            return (
+              <div
+                key={index}
+                className="p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[400px]"
+              >
+                <div className="space-y-2">
+                  {dayProjects.map((project) => (
+                    <div
+                      key={project.id}
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-3 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
+                          {project.name}
+                        </h4>
+                        <div className="flex items-center space-x-1 ml-2">
+                          <button
+                            onClick={() => handleEdit(project)}
+                            className="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                          >
+                            <Edit2 className="h-3 w-3" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(project.id)}
+                            className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <div className="flex items-center space-x-1">
+                          <User className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs text-gray-600 dark:text-gray-300 truncate">
+                            {project.projectFrom}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-1">
+                          <DollarSign className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs font-medium text-gray-900 dark:text-white">
+                            Rs. {project.amount.toLocaleString()}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}
+                          >
+                            {getStatusLabel(project.status)}
+                          </span>
+
+                          {project.files.length > 0 && (
+                            <div className="flex items-center space-x-1">
+                              <FileText className="h-3 w-3 text-gray-400" />
+                              <span className="text-xs text-gray-500">
+                                {project.files.length}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
+
+      {projects.length === 0 && !showAddForm && (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Clipboard className="h-12 w-12 text-gray-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+            No projects yet
+          </h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
+            Get started by adding your first project to the board.
+          </p>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add Your First Project</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
