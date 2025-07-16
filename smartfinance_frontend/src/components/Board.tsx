@@ -274,14 +274,29 @@ const Board: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gold font-['DM_Sans']">
           Project Board
         </h1>
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-        >
-          <Plus className="h-5 w-5" />
-          <span>Add Project</span>
-        </button>
+        {projects.length > 0 && (
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add Project</span>
+          </button>
+        )}
       </div>
+
+      {/* Add Project Button for First Project */}
+      {projects.length === 0 && !showAddForm && (
+        <div className="text-center py-8">
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors mx-auto"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add Your First Project</span>
+          </button>
+        </div>
+      )}
 
       {/* Calendar Navigation */}
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
