@@ -37,11 +37,44 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
   const handleTransfer = () => {
     if (!selectedAccount || !selectedNotification) return;
 
-    // In a real app, you would transfer the amount to the selected account
-    toast.success(`Amount transferred to ${selectedAccount}`);
-    setShowTransferModal(false);
-    setSelectedNotification(null);
-    setSelectedAccount("");
+    try {
+      // Parse the selected account string to get bank and account IDs
+      const [bankName, accountName] = selectedAccount.split(" - ");
+      const targetBank = banks.find((b) => b.name === bankName);
+      const targetAccount = targetBank?.accounts.find(
+        (a) => a.name === accountName,
+      );
+
+      if (!targetBank || !targetAccount) {
+        toast.error("Selected account not found");
+        return;
+      }
+
+      // Add the project amount to the selected account balance
+      updateAccount(targetBank.id, targetAccount.id, {
+        balance: targetAccount.balance + selectedNotification.amount,
+      });
+
+      // Create a transaction record for this transfer
+      addTransaction({
+        date: new Date().toISOString().split("T")[0],
+        description: `Project completion payment: ${selectedNotification.projectName}`,
+        amount: selectedNotification.amount,
+        type: "deposit",
+        bankId: targetBank.id,
+        accountId: targetAccount.id,
+      });
+
+      toast.success(
+        `Rs. ${selectedNotification.amount.toLocaleString()} transferred to ${selectedAccount}`,
+      );
+      setShowTransferModal(false);
+      setSelectedNotification(null);
+      setSelectedAccount("");
+    } catch (error) {
+      toast.error("Failed to transfer amount. Please try again.");
+      console.error("Transfer error:", error);
+    }
   };
 
   return (
