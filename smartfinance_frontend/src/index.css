@@ -247,10 +247,6 @@ button {
   --gold: #d4af37;
   --gold-dark: #b8941f;
   --gold-light: #f7e98e;
-}
-
-/* Dark gold theme specific styles */
-.dark {
   background-color: #000000;
   color: #ffffff;
 }
