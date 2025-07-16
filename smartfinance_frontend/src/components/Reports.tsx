@@ -158,6 +158,7 @@ const Reports: React.FC = () => {
               <option value="deposit">Deposit</option>
               <option value="withdrawal">Withdrawal</option>
               <option value="transfer">Transfer</option>
+              <option value="external_transfer">External Transfer</option>
             </select>
           </div>
         </div>
