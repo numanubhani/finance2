@@ -14,6 +14,7 @@ import TransactionManager from "./components/TransactionManager";
 import BanksAccounts from "./components/BanksAccounts";
 import Reports from "./components/Reports";
 import Settings from "./components/Settings";
+import Board from "./components/Board";
 import BankAccountSetup from "./components/BankAccountSetup";
 import BankDataInitializer from "./components/BankDataInitializer";
 
@@ -82,6 +83,8 @@ function App() {
         return <BanksAccounts />;
       case "reports":
         return <Reports />;
+      case "board":
+        return <Board />;
       case "settings":
         return <Settings />;
       default:
