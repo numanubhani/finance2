@@ -148,13 +148,25 @@ const Dashboard: React.FC = () => {
                   <div className="text-right">
                     <p
                       className={`font-semibold break-all ${
-                        transaction.amount > 0
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-red-600 dark:text-red-400"
+                        transaction.type === "external_transfer" ||
+                        transaction.type === "withdrawal" ||
+                        (transaction.type === "transfer" &&
+                          transaction.amount > 0)
+                          ? "text-red-600 dark:text-red-400"
+                          : transaction.amount > 0
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-red-600 dark:text-red-400"
                       }`}
                     >
-                      {transaction.amount > 0 ? "+" : ""}Rs.{" "}
-                      {Math.abs(transaction.amount).toLocaleString()}
+                      {transaction.type === "external_transfer" ||
+                      transaction.type === "withdrawal" ||
+                      (transaction.type === "transfer" &&
+                        transaction.amount > 0)
+                        ? "-"
+                        : transaction.amount > 0
+                          ? "+"
+                          : ""}
+                      Rs. {Math.abs(transaction.amount).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {new Date(transaction.date).toLocaleDateString()}
