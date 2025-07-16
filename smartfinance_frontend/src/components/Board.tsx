@@ -350,7 +350,7 @@ const Board: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Amount *
@@ -388,6 +388,28 @@ const Board: React.FC = () => {
                   <option value="in_progress">In Progress</option>
                   <option value="complete">Complete</option>
                   <option value="incomplete">Incomplete</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Priority *
+                </label>
+                <select
+                  value={formData.priority}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      priority: e.target.value as ProjectPriority,
+                    }))
+                  }
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
                 </select>
               </div>
 
@@ -476,7 +498,7 @@ const Board: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-7 min-h-[400px]">
+        <div className="grid grid-cols-7 min-h-[500px]">
           {weekDays.map((day, index) => {
             const dateKey = format(day, "yyyy-MM-dd");
             const dayProjects = projectsByDate[dateKey] || [];
@@ -484,7 +506,7 @@ const Board: React.FC = () => {
             return (
               <div
                 key={index}
-                className="p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[400px]"
+                className="p-3 border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[500px] w-40"
               >
                 <div className="space-y-2">
                   {dayProjects.map((project) => (
