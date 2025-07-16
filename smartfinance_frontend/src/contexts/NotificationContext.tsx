@@ -5,6 +5,7 @@ export type Notification = {
   projectId: string;
   projectName: string;
   message: string;
+  amount: number;
   timestamp: Date;
   read: boolean;
 };
@@ -15,6 +16,7 @@ type NotificationContextType = {
     projectId: string,
     projectName: string,
     message: string,
+    amount: number,
   ) => void;
   markAsRead: (id: string) => void;
   clearNotification: (id: string) => void;
@@ -41,12 +43,18 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const addNotification = useCallback(
-    (projectId: string, projectName: string, message: string) => {
+    (
+      projectId: string,
+      projectName: string,
+      message: string,
+      amount: number,
+    ) => {
       const newNotification: Notification = {
         id: Date.now().toString(),
         projectId,
         projectName,
         message,
+        amount,
         timestamp: new Date(),
         read: false,
       };
