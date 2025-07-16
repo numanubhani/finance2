@@ -557,7 +557,7 @@ const Board: React.FC = () => {
             return (
               <div
                 key={index}
-                className="p-3 border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[500px] w-40"
+                className="p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[500px] overflow-hidden"
               >
                 <div className="space-y-2">
                   {dayProjects.map((project) => (
