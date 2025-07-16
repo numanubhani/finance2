@@ -563,7 +563,7 @@ const Board: React.FC = () => {
                   {dayProjects.map((project) => (
                     <div
                       key={project.id}
-                      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-3 hover:shadow-md transition-shadow"
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-2 hover:shadow-md transition-shadow w-full"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
