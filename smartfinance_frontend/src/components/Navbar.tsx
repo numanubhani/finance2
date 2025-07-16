@@ -6,9 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 type NavbarProps = {
   onLogout: () => void;
+  onNavigate: (page: string) => void;
 };
 
-const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
   const { theme, toggleTheme } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [username, setUsername] = useState("");
@@ -72,7 +73,13 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
 
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
-                  <button className="flex items-center space-x-2 w-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <button
+                    onClick={() => {
+                      onNavigate("settings");
+                      setShowUserMenu(false);
+                    }}
+                    className="flex items-center space-x-2 w-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
                     <Settings className="h-4 w-4" />
                     <span>Settings</span>
                   </button>
