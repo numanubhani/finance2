@@ -196,6 +196,25 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
         ),
       );
     } else {
+      // For deposits and withdrawals, check balance for withdrawals
+      if (transaction.type === "withdrawal") {
+        const sourceBank = banks.find((b) => b.id === transaction.bankId);
+        const sourceAccount = sourceBank?.accounts.find(
+          (a) => a.id === transaction.accountId,
+        );
+
+        if (!sourceAccount) {
+          throw new Error("Source account not found");
+        }
+
+        // Check if source account has sufficient balance (transaction.amount is negative for withdrawals)
+        if (sourceAccount.balance < Math.abs(transaction.amount)) {
+          throw new Error(
+            `Insufficient balance in ${sourceBank?.name}. Available: Rs. ${sourceAccount.balance.toLocaleString()}, Requested: Rs. ${Math.abs(transaction.amount).toLocaleString()}`,
+          );
+        }
+      }
+
       // For deposits and withdrawals, use the existing logic
       setTransactions((prev) => [...prev, newTransaction]);
 

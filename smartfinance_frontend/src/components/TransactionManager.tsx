@@ -135,7 +135,7 @@ const TransactionManager: React.FC = () => {
     );
 
     if (!bank || !account) {
-      alert("Please select a valid bank and account");
+      showToast("error", "Please select a valid bank and account");
       return;
     }
 
@@ -754,10 +754,7 @@ const TransactionManager: React.FC = () => {
             </div>
           ) : (
             transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
+              <div key={transaction.id} className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
@@ -798,13 +795,25 @@ const TransactionManager: React.FC = () => {
                   <div className="flex items-center space-x-4">
                     <span
                       className={`font-semibold ${
-                        transaction.amount >= 0
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-red-600 dark:text-red-400"
+                        transaction.type === "external_transfer" ||
+                        transaction.type === "withdrawal" ||
+                        (transaction.type === "transfer" &&
+                          transaction.amount > 0)
+                          ? "text-red-600 dark:text-red-400"
+                          : transaction.amount >= 0
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-red-600 dark:text-red-400"
                       }`}
                     >
-                      {transaction.amount >= 0 ? "+" : ""}Rs.{" "}
-                      {transaction.amount.toLocaleString()}
+                      {transaction.type === "external_transfer" ||
+                      transaction.type === "withdrawal" ||
+                      (transaction.type === "transfer" &&
+                        transaction.amount > 0)
+                        ? "-"
+                        : transaction.amount >= 0
+                          ? "+"
+                          : ""}
+                      Rs. {Math.abs(transaction.amount).toLocaleString()}
                     </span>
 
                     <div className="flex items-center space-x-2">

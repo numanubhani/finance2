@@ -9,6 +9,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useData } from "../contexts/DataContext";
+import { useToast } from "../contexts/ToastContext";
 
 const BanksAccounts: React.FC = () => {
   const {
@@ -20,6 +21,7 @@ const BanksAccounts: React.FC = () => {
     deleteBank,
     deleteAccount,
   } = useData();
+  const { showToast } = useToast();
   const [expandedBanks, setExpandedBanks] = useState<Set<string>>(new Set());
   const [showAddBank, setShowAddBank] = useState(false);
   const [showAddAccount, setShowAddAccount] = useState<string | null>(null);
@@ -45,7 +47,10 @@ const BanksAccounts: React.FC = () => {
 
   const handleAddBank = () => {
     if (newBankName.trim()) {
-      addBank({ name: newBankName.trim(), accounts: [] });
+      const capitalizedName =
+        newBankName.trim().charAt(0).toUpperCase() +
+        newBankName.trim().slice(1);
+      addBank({ name: capitalizedName, accounts: [] });
       setNewBankName("");
       setShowAddBank(false);
     }
@@ -63,7 +68,7 @@ const BanksAccounts: React.FC = () => {
       setNewAccountBalance("");
       setShowAddAccount(null);
     } else {
-      alert("Please enter both account title and account number");
+      showToast("error", "Please enter both account title and account number");
     }
   };
 
@@ -272,7 +277,7 @@ const BanksAccounts: React.FC = () => {
                                 setNewAccountName(e.target.value)
                               }
                               placeholder="Account Title"
-                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm"
+                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm border-2 border-white"
                               onBlur={() =>
                                 handleUpdateAccount(bank.id, account.id)
                               }
@@ -288,7 +293,7 @@ const BanksAccounts: React.FC = () => {
                                 setNewAccountNumber(e.target.value)
                               }
                               placeholder="Account Number"
-                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm"
+                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm border-2 border-white"
                               onBlur={() =>
                                 handleUpdateAccount(bank.id, account.id)
                               }
@@ -303,7 +308,7 @@ const BanksAccounts: React.FC = () => {
                               onChange={(e) =>
                                 setNewAccountBalance(e.target.value)
                               }
-                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm w-24"
+                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm w-24 border-2 border-white"
                               onBlur={() =>
                                 handleUpdateAccount(bank.id, account.id)
                               }

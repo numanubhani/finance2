@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { DataProvider } from "./contexts/DataContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -14,6 +15,7 @@ import TransactionManager from "./components/TransactionManager";
 import BanksAccounts from "./components/BanksAccounts";
 import Reports from "./components/Reports";
 import Settings from "./components/Settings";
+import Board from "./components/Board";
 import BankAccountSetup from "./components/BankAccountSetup";
 import BankDataInitializer from "./components/BankDataInitializer";
 
@@ -29,6 +31,7 @@ function App() {
     | null
   >(null);
   const [currentPage, setCurrentPage] = useState("dashboard");
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   // Check for token on load
   useEffect(() => {
@@ -55,7 +58,7 @@ function App() {
     banksData: {
       bankName: string;
       accounts: { title: string; number: string; balance: number }[];
-    }[]
+    }[],
   ) => {
     setPendingBanksData(banksData);
     setShowBankSetup(false);
@@ -82,6 +85,8 @@ function App() {
         return <BanksAccounts />;
       case "reports":
         return <Reports />;
+      case "board":
+        return <Board />;
       case "settings":
         return <Settings />;
       default:
@@ -91,47 +96,53 @@ function App() {
 
   return (
     <ToastProvider>
-      <ThemeProvider>
-        {showBankSetup ? (
-          <BankAccountSetup
-            onComplete={handleBankSetupComplete}
-            onSkip={handleSkipBankSetup}
-          />
-        ) : !isAuthenticated ? (
-          authMode === "login" ? (
-            <Login
-              onLogin={handleLogin}
-              onSwitchToRegister={() => setAuthMode("register")}
+      <NotificationProvider>
+        <ThemeProvider>
+          {showBankSetup ? (
+            <BankAccountSetup
+              onComplete={handleBankSetupComplete}
+              onSkip={handleSkipBankSetup}
             />
+          ) : !isAuthenticated ? (
+            authMode === "login" ? (
+              <Login
+                onLogin={handleLogin}
+                onSwitchToRegister={() => setAuthMode("register")}
+              />
+            ) : (
+              <Register
+                onRegister={handleRegister}
+                onSwitchToLogin={() => setAuthMode("login")}
+              />
+            )
           ) : (
-            <Register
-              onRegister={handleRegister}
-              onSwitchToLogin={() => setAuthMode("login")}
-            />
-          )
-        ) : (
-          <DataProvider>
-            <BankDataInitializer
-              pendingBanksData={pendingBanksData}
-              onDataProcessed={handleDataProcessed}
-            >
-              <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-                <Navbar onLogout={handleLogout} />
-                <div className="flex">
-                  <Sidebar
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                  />
-                  <main className="flex-1 lg:ml-64 pt-16">
-                    <div className="p-4 md:p-6 lg:p-8">{renderPage()}</div>
-                  </main>
+            <DataProvider>
+              <BankDataInitializer
+                pendingBanksData={pendingBanksData}
+                onDataProcessed={handleDataProcessed}
+              >
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+                  <Navbar onLogout={handleLogout} onNavigate={setCurrentPage} />
+                  <div className="flex">
+                    <Sidebar
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                      visible={sidebarVisible}
+                      onToggle={() => setSidebarVisible(!sidebarVisible)}
+                    />
+                    <main
+                      className={`flex-1 pt-16 transition-all duration-300 ${sidebarVisible ? "lg:ml-64" : "lg:ml-16"}`}
+                    >
+                      <div className="p-4 md:p-6 lg:p-8">{renderPage()}</div>
+                    </main>
+                  </div>
+                  <FloatingChatAssistant />
                 </div>
-                <FloatingChatAssistant />
-              </div>
-            </BankDataInitializer>
-          </DataProvider>
-        )}
-      </ThemeProvider>
+              </BankDataInitializer>
+            </DataProvider>
+          )}
+        </ThemeProvider>
+      </NotificationProvider>
     </ToastProvider>
   );
 }

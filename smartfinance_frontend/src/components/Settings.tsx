@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { User, Camera, Eye, EyeOff, Save, Plus, Trash2 } from "lucide-react";
 import { useData } from "../contexts/DataContext";
+import { useToast } from "../contexts/ToastContext";
 
 const Settings: React.FC = () => {
   const { banks, addBank, deleteBank } = useData();
+  const { showToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [bankCount, setBankCount] = useState(banks.length);
 
@@ -26,12 +28,15 @@ const Settings: React.FC = () => {
 
   const handleSaveProfile = () => {
     console.log("Saving profile:", formData);
-    alert("Profile updated successfully!");
+    showToast("success", "Profile updated successfully!");
   };
 
   const handleAddBank = () => {
     if (newBankName.trim()) {
-      addBank({ name: newBankName.trim(), accounts: [] });
+      const capitalizedName =
+        newBankName.trim().charAt(0).toUpperCase() +
+        newBankName.trim().slice(1);
+      addBank({ name: capitalizedName, accounts: [] });
       setNewBankName("");
       setShowAddBankForm(false);
       setBankCount((prev) => prev + 1);
@@ -42,13 +47,14 @@ const Settings: React.FC = () => {
     if (confirm("Are you sure you want to delete this bank?")) {
       deleteBank(bankId);
       setBankCount((prev) => prev - 1);
+      showToast("success", "Bank deleted successfully");
     }
   };
 
   const handleLogout = () => {
     if (confirm("Are you sure you want to logout?")) {
       console.log("Logging out...");
-      alert("Logout functionality would be implemented here.");
+      showToast("info", "Logout functionality would be implemented here.");
     }
   };
 
