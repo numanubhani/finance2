@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-['DM_Sans']">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gold font-['DM_Sans']">
           Dashboard
         </h1>
       </div>
@@ -43,8 +43,8 @@ const Dashboard: React.FC = () => {
                 Rs. {totalBalance.toLocaleString()}
               </p>
             </div>
-            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-              <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-3 bg-blue-100 dark:bg-gold/20 rounded-full">
+              <DollarSign className="h-6 w-6 text-blue-600 dark:text-gold" />
             </div>
           </div>
         </div>
