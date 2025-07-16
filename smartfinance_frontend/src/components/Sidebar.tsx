@@ -75,7 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => {
                     setCurrentPage(item.id);
                     setIsOpen(false);
-                    if (!visible) onToggle(); // Expand sidebar when clicking icon in collapsed mode
                   }}
                   className={`w-full flex items-center rounded-lg transition-colors group relative ${
                     visible ? "space-x-3 px-4 py-3" : "justify-center px-2 py-3"
