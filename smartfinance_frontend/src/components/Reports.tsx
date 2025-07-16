@@ -26,11 +26,11 @@ const Reports: React.FC = () => {
   });
 
   const totalIncome = filteredTransactions
-    .filter((t) => t.amount > 0)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t) => t.type === "deposit")
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
   const totalExpenses = filteredTransactions
-    .filter((t) => t.amount < 0)
+    .filter((t) => t.type === "withdrawal" || t.type === "external_transfer")
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
   const netBalance = totalIncome - totalExpenses;
