@@ -30,6 +30,8 @@ export type ProjectStatus =
   | "complete"
   | "incomplete";
 
+export type ProjectPriority = "low" | "medium" | "high" | "urgent";
+
 export type Project = {
   id: string;
   name: string;
@@ -38,6 +40,7 @@ export type Project = {
   amount: number;
   files: File[];
   status: ProjectStatus;
+  priority: ProjectPriority;
   createdAt: string;
   dueDate?: string;
 };
@@ -54,6 +57,7 @@ const Board: React.FC = () => {
     projectFrom: "",
     amount: "",
     status: "started" as ProjectStatus,
+    priority: "medium" as ProjectPriority,
     dueDate: "",
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
