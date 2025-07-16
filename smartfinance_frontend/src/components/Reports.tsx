@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Filter, Download, TrendingUp, TrendingDown } from "lucide-react";
+import {
+  Filter,
+  Download,
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+} from "lucide-react";
 import { useData } from "../contexts/DataContext";
 import { useToast } from "../contexts/ToastContext";
 
@@ -172,7 +178,7 @@ const Reports: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
