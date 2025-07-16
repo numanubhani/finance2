@@ -5,6 +5,7 @@ import {
   TrendingUp,
   TrendingDown,
   DollarSign,
+  Clipboard,
 } from "lucide-react";
 import { useData } from "../contexts/DataContext";
 import { useToast } from "../contexts/ToastContext";
