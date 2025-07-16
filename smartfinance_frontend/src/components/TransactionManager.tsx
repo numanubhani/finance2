@@ -754,10 +754,7 @@ const TransactionManager: React.FC = () => {
             </div>
           ) : (
             transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
+              <div key={transaction.id} className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
