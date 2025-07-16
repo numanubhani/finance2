@@ -177,6 +177,7 @@ const Board: React.FC = () => {
           projectData.id,
           projectData.name,
           `Your project "${projectData.name}" has been marked as completed! Click to transfer Rs. ${projectData.amount.toLocaleString()} to your account.`,
+          projectData.amount,
         );
       }
 
