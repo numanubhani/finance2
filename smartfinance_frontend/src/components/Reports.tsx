@@ -17,6 +17,7 @@ const Reports: React.FC = () => {
   const [selectedBank, setSelectedBank] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [showBoardProjects, setShowBoardProjects] = useState(false);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const matchesDate =
