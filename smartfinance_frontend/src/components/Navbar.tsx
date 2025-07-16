@@ -57,6 +57,82 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onNavigate }) => {
               )}
             </button>
 
+            {/* Notifications */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+              >
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 max-h-96 overflow-y-auto">
+                  <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                      Notifications
+                    </h3>
+                  </div>
+                  {notifications.length === 0 ? (
+                    <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+                      No notifications
+                    </div>
+                  ) : (
+                    notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className={`px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600 last:border-b-0 ${
+                          !notification.read
+                            ? "bg-blue-50 dark:bg-blue-900/10"
+                            : ""
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {notification.projectName}
+                            </p>
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                              {notification.message}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {notification.timestamp.toLocaleString()}
+                            </p>
+                          </div>
+                          <div className="flex items-center space-x-1 ml-2">
+                            {!notification.read && (
+                              <button
+                                onClick={() => {
+                                  markAsRead(notification.id);
+                                  setSelectedNotification(notification);
+                                  setShowTransferModal(true);
+                                  setShowNotifications(false);
+                                }}
+                                className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+                              >
+                                Transfer
+                              </button>
+                            )}
+                            <button
+                              onClick={() => clearNotification(notification.id)}
+                              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* User Menu */}
             <div className="relative">
               <button
