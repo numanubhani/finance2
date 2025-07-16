@@ -277,7 +277,7 @@ const BanksAccounts: React.FC = () => {
                                 setNewAccountName(e.target.value)
                               }
                               placeholder="Account Title"
-                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm"
+                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm border-2 border-white"
                               onBlur={() =>
                                 handleUpdateAccount(bank.id, account.id)
                               }
@@ -293,7 +293,7 @@ const BanksAccounts: React.FC = () => {
                                 setNewAccountNumber(e.target.value)
                               }
                               placeholder="Account Number"
-                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm"
+                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm border-2 border-white"
                               onBlur={() =>
                                 handleUpdateAccount(bank.id, account.id)
                               }
@@ -308,7 +308,7 @@ const BanksAccounts: React.FC = () => {
                               onChange={(e) =>
                                 setNewAccountBalance(e.target.value)
                               }
-                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm w-24"
+                              className="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white px-2 py-1 rounded text-sm w-24 border-2 border-white"
                               onBlur={() =>
                                 handleUpdateAccount(bank.id, account.id)
                               }
