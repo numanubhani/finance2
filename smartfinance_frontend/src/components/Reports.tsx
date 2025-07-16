@@ -52,6 +52,52 @@ const Reports: React.FC = () => {
 
   const selectedBankData = banks.find((b) => b.id === selectedBank);
 
+  // Mock Board Projects Data (in a real app, this would come from a shared context)
+  const mockBoardProjects = [
+    {
+      id: "1",
+      name: "Website Development",
+      projectFrom: "Tech Corp",
+      amount: 50000,
+      status: "complete",
+      date: "2024-01-15",
+    },
+    {
+      id: "2",
+      name: "Mobile App Design",
+      projectFrom: "StartupXYZ",
+      amount: 25000,
+      status: "complete",
+      date: "2024-01-20",
+    },
+    {
+      id: "3",
+      name: "Logo Design",
+      projectFrom: "Small Business",
+      amount: 5000,
+      status: "complete",
+      date: "2024-01-25",
+    },
+    {
+      id: "4",
+      name: "E-commerce Platform",
+      projectFrom: "Online Store",
+      amount: 75000,
+      status: "in_progress",
+      date: "2024-01-30",
+    },
+  ];
+
+  const completedProjects = mockBoardProjects.filter(
+    (p) => p.status === "complete",
+  );
+  const totalProjectEarnings = completedProjects.reduce(
+    (sum, p) => sum + p.amount,
+    0,
+  );
+  const totalProjectsCount = mockBoardProjects.length;
+  const completedProjectsCount = completedProjects.length;
+
   const handleDownloadPDF = () => {
     // Mock PDF download functionality
     const reportData = {
