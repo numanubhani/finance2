@@ -370,3 +370,11 @@ button {
 .dark button:hover {
   background-color: rgba(212, 175, 55, 0.1);
 }
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
