@@ -298,7 +298,9 @@ const Dashboard: React.FC = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      From Account
+                      {selectedTransaction.type === "deposit"
+                        ? "To Account"
+                        : "From Account"}
                     </label>
                     <p className="mt-1 text-gray-900 dark:text-white">
                       {
