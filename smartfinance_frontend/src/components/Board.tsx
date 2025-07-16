@@ -224,6 +224,25 @@ const Board: React.FC = () => {
     }
   };
 
+  const getPriorityColor = (priority: ProjectPriority) => {
+    switch (priority) {
+      case "urgent":
+        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
+      case "high":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
+      case "low":
+        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+    }
+  };
+
+  const getPriorityLabel = (priority: ProjectPriority) => {
+    return priority.charAt(0).toUpperCase() + priority.slice(1);
+  };
+
   const navigateWeek = (direction: "prev" | "next") => {
     setCurrentWeek((prev) => addDays(prev, direction === "next" ? 7 : -7));
   };
@@ -549,21 +568,31 @@ const Board: React.FC = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}
-                          >
-                            {getStatusLabel(project.status)}
-                          </span>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}
+                            >
+                              {getStatusLabel(project.status)}
+                            </span>
 
-                          {project.files.length > 0 && (
-                            <div className="flex items-center space-x-1">
-                              <FileText className="h-3 w-3 text-gray-400" />
-                              <span className="text-xs text-gray-500">
-                                {project.files.length}
-                              </span>
-                            </div>
-                          )}
+                            {project.files.length > 0 && (
+                              <div className="flex items-center space-x-1">
+                                <FileText className="h-3 w-3 text-gray-400" />
+                                <span className="text-xs text-gray-500">
+                                  {project.files.length}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex justify-center">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(project.priority)}`}
+                            >
+                              {getPriorityLabel(project.priority)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
