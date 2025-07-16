@@ -120,12 +120,7 @@ function App() {
               onDataProcessed={handleDataProcessed}
             >
               <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-                <Navbar
-                  onLogout={handleLogout}
-                  onNavigate={setCurrentPage}
-                  sidebarVisible={sidebarVisible}
-                  onToggleSidebar={() => setSidebarVisible(!sidebarVisible)}
-                />
+                <Navbar onLogout={handleLogout} onNavigate={setCurrentPage} />
                 <div className="flex">
                   <Sidebar
                     currentPage={currentPage}
