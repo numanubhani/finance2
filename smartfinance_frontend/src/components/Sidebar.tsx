@@ -51,6 +51,21 @@ const Sidebar: React.FC<SidebarProps> = ({
         } lg:translate-x-0 ${visible ? "w-64" : "w-16"}`}
       >
         <div className="p-4">
+          {/* Sidebar Toggle Button */}
+          <div className="hidden lg:flex justify-end mb-4">
+            <button
+              onClick={onToggle}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+              title={visible ? "Collapse Sidebar" : "Expand Sidebar"}
+            >
+              {visible ? (
+                <X className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+              ) : (
+                <Menu className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+              )}
+            </button>
+          </div>
+
           <nav className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
