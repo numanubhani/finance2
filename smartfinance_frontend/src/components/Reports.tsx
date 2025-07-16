@@ -35,6 +35,13 @@ const Reports: React.FC = () => {
 
   const netBalance = totalIncome - totalExpenses;
 
+  // Calculate total balance from all accounts
+  const totalBalance = banks.reduce(
+    (sum, bank) =>
+      sum + bank.accounts.reduce((acc, account) => acc + account.balance, 0),
+    0,
+  );
+
   const selectedBankData = banks.find((b) => b.id === selectedBank);
 
   const handleDownloadPDF = () => {
